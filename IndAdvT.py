@@ -1,5 +1,3 @@
-
-from doctest import FAIL_FAST
 import numpy as np 
 import torch.nn
 import torch

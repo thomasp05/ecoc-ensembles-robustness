@@ -27,7 +27,7 @@ def clip_eta(eta, norm, eps):
                 avoid_zero_div, torch.sum(torch.abs(eta), dim=reduc_ind, keepdim=True)
             )
         elif norm == 2:
-            with torch.no_grad():  # Added by Thomas Philippon (2021-07-07). Prevents an error with grad because of inplace operation.
+            with torch.no_grad():  # Prevents an error with grad because of inplace operation.
                 norm = torch.sqrt(torch.max(avoid_zero_div, torch.sum(eta ** 2, dim=reduc_ind, keepdim=True)))
         factor = torch.min(torch.tensor(1.0, dtype=eta.dtype, device=eta.device), eps / norm)
         eta *= factor

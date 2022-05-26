@@ -139,7 +139,7 @@ def projected_gradient_descent_hinge(
             adv_x = torch.clamp(adv_x, clip_min, clip_max)
         i += 1
 
-        # check if adv image is misclassified (added by Thomas) 
+        # check if adv image is misclassified 
         if early_stop:
             with torch.no_grad():
                 _, adv_predictions = torch.max(model_fn(adv_x), 1)
@@ -147,7 +147,7 @@ def projected_gradient_descent_hinge(
                 adv_final[ind] = adv_x[ind]
                 successfully_perturbed[ind] = 1  # keep track of which images were successfully perturbed 
             
-    # add perturbed images that were not able to fool the model under attack to adv_final (added by Thomas)
+    # add perturbed images that were not able to fool the model under attack to adv_final 
     if early_stop:
         ind_ = (successfully_perturbed == 0).nonzero(as_tuple=True)[0]   
         adv_final[ind_] = adv_x[ind_]    
