@@ -2,7 +2,7 @@
 
 ## Here is the list of important files. 
 
-* **TrainEcocModel.py** : Train ECOC ensembles of shared and independent architecture on CIFAR10 and Fashion-MNIST. 
+* **TrainEcocModel.py** : Train ECOC ensembles of shared and independent architecture on CIFAR10 and Fashion-MNIST. Also used to train ECOC ensembles with RegAdvT (adversarial examples used for adversarial training are generated on the whole ensemble and all binary classifiers are trained with the same perturbations)
 * **AttackEcocModel.py** : Attack ECOC ensembles with FGSM, PGD, C&W_L2 attacks and all other adaptations presented in the paper.
 * **TrainModel.py** : Train baseline models (SIMPLE and ENSEMBLE)
 * **AttackModel.py** : Attack baseline models with FGSM, PGD, C&W_L2 attacks and all other adaptations presented in the paper.
