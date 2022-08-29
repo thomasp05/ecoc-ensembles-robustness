@@ -31,7 +31,10 @@ W = np.load('codewords/codeword_' + str(nb_bits_per_model*nb_independent_models)
 W[W==0] = -1   # codewords need to be [-1, 1] instead of [0, 1]
 
 # Init ECOC Model
-model = Models.ecoc_ensemble_no_bn(W, nb_independent_models, filters, filter2, nb_independent_models*nb_bits_per_model, dataset_name) 
+# model = Models.ecoc_ensemble_no_bn(W, nb_independent_models, filters, filter2, nb_independent_models*nb_bits_per_model, dataset_name) 
+
+# ECOC Resnet Models 
+model = Models.ResNetECOC(W, nb_independent_models, nb_independent_models) 
 
 # Training params 
 optimizer = torch.optim.Adam(model.parameters(), lr=lr)
