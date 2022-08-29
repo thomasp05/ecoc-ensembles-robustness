@@ -9,7 +9,7 @@ import save_load_interface
 from MyTorch_ecoc import Classifier_ecoc as Classifier_ecoc
 
 # parameters for PyTorch model type and its training
-dataset_name = "Fashion-MNIST" #"CIFAR10"  
+dataset_name = "CIFAR10" #"CIFAR10"  or "Fashion-MNIST"
 batch_size = 100
 nb_epoch = 1000
 lr = 0.0001 
@@ -70,6 +70,6 @@ else:
     classifier = Classifier_ecoc(model, W, dataset_name, device, nb_classes, batch_size, input_shape, optimizer, criterion, seed) 
 
 # Train ECOC model
-classifier.fit(nb_epoch, 0.98, save_iter, path=path_checkpoint, advTraining=RegAdvt) 
+classifier.fit(nb_epoch, 0.98, save_iter, path=path_checkpoint, advt=RegAdvt) 
 
 
