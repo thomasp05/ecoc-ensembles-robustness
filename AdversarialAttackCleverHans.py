@@ -5,12 +5,14 @@ This script uses CleverHans
 """
 
 import torch
+import numpy as np 
 from torch.utils.data import DataLoader, TensorDataset
 from cleverhans.attacks.fast_gradient_method import fast_gradient_method
 from cleverhans.attacks.projected_gradient_descent import projected_gradient_descent
 from cleverhans.attacks.projected_gradient_descent_hinge import projected_gradient_descent_hinge
 from cleverhans.attacks.carlini_wagner_l2 import carlini_wagner_l2
 from Loss_Function import hinge_vec
+from autoattack import AutoAttack
 
 # FGSM, from article "Explaining and Harnessing Adversarial Examples"
 def FGSM(model, batch_size, test_loader, epsilon, norm):
@@ -99,6 +101,31 @@ def CW_L2(model, batch_size, test_loader, max_iter, confidence, learning_rate=5e
         y = torch.cat((y, labels.int()), dim=0)
         
     data_loader = data_loader = make_dataloader(X_adv, y, batch_size)
+    return data_loader
+
+
+def autoAttack(model, batch_size, test_loader, epsilon, norm):
+    if norm == np.inf: 
+        norm_ = 'Linf'
+    else: 
+        norm_ = 'L2'
+
+    # initialize autoAttack
+    adversary = AutoAttack(model, norm=norm_, eps=epsilon, version='standard')
+    
+    X_adv = torch.empty([0], device="cuda")
+    y = torch.empty(0, dtype=torch.int32, device="cuda")
+    for images, labels in test_loader: 
+        images, labels = images.to("cuda"), labels.to("cuda")
+
+        # run standard attack 
+        x_ = adversary.run_standard_evaluation(images, labels, bs=batch_size) 
+
+        # update arrays
+        X_adv = torch.cat((X_adv, x_), dim=0)
+        y = torch.cat((y, labels.int()), dim=0)
+        
+    data_loader = make_dataloader(X_adv, y, batch_size) 
     return data_loader
 
 

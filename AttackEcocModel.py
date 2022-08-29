@@ -18,7 +18,7 @@ filter2 = [16]            # param D
 root = 'models_final/CIFAR10/AdvT/IndAdvt_2iter/indAdvt_2iter.pth' # for SIMPLE model, provide path of simple_1 model. For ENSEMBLE models, provide path of folder where all SIMPLE models are
 
 # params for performing attacks 
-attack_type = "FGSM"      # can be 'FGSM' or 'PDG' or 'CWL2' For CWL2, need to save the perturbations and run the script "cw_bound.py" to get the accuracy with a L2 bound. Otherwise, the perturbations generated in this script are not bounded. 
+attack_type = "FGSM"      # can be 'FGSM' or 'PDG' or 'CWL2' or 'auto' For CWL2, need to save the perturbations and run the script "cw_bound.py" to get the accuracy with a L2 bound. Otherwise, the perturbations generated in this script are not bounded. 
 norm = np.inf             # norm of the attack (np.inf or 2)
 max_iter = 100            # max iteration for PGD attack 
 es = True                 # True: PGD^es, False: PGD
@@ -76,6 +76,9 @@ def main():
         data_perturbed = AdversarialAttackCleverHans.PGD(full_model, batch_size, test_data, epsilon, eps_step, max_iter, norm, loss, early_stop=True)
     elif attack_type == 'CW':
         data_perturbed = AdversarialAttackCleverHans.CW_L2(full_model, batch_size, test_data, max_iter=max_iter)
+    elif attack_type == 'auto': 
+        data_perturbed = AdversarialAttackCleverHans.autoAttack(full_model, batch_size, test_data, epsilon, norm)
+
 
     # compute accuracy before and after the attack
     predictions_clean, true_labels_clean = Metrics.predict_eval(full_model, test_data, device) 

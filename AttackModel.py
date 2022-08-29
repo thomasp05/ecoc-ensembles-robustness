@@ -16,7 +16,7 @@ seed = 42  # for making sure same images are used every time
 root = 'models_final/FMNIST/Baselines/' # for SIMPLE model, provide path of simple_1 model. For ENSEMBLE models, provide path of folder where all SIMPLE models are
 
 # params for performing attacks 
-attack_type = "FGSM"       # can be 'FGSM' or 'PDG' or 'CWL2'
+attack_type = "FGSM"       # can be 'FGSM' or 'PDG' or 'CWL2' or 'auto
 norm = np.inf          
 max_iter = 100            # max iteration for PGD attack 
 es = True                 # True: PGD^es, False: PGD
@@ -65,6 +65,9 @@ def main():
         data_perturbed = AdversarialAttackCleverHans.PGD(model, batch_size, test_data, epsilon, eps_step, max_iter, norm, loss=loss, Early_stop=es)
     elif attack_type == 'CWL2':
         data_perturbed = AdversarialAttackCleverHans.CW_L2(model, batch_size, test_data, max_iter)
+    elif attack_type == 'auto': 
+        data_perturbed = AdversarialAttackCleverHans.autoAttack(model, batch_size, test_data, epsilon, norm)
+
 
     # compute accuracy before and after the attack
     predictions_clean, true_labels_clean = Metrics.predict_eval(model, test_data, device) 
