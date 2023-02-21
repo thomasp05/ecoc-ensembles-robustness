@@ -18,7 +18,7 @@ path_checkpoint = "ecoc_16_1/"  # were the checkpoints are saved
 save_iter = 10                         # interval between checkpoints being saved
 nb_independent_models = 16            # Number of shared feature extractors (for independent models, 16, 32 and 16 since they are independent)
 nb_bits_per_model = 1
-filters = [32, 64, 128] # params A, B, C
+filters = [16, 32, 64] #[32, 64, 128] # params A, B, C
 filter2 = [64]            # param D
 RegAdvt = False          # if want to perform RegAdvt
 
@@ -31,10 +31,16 @@ W = np.load('codewords/codeword_' + str(nb_bits_per_model*nb_independent_models)
 W[W==0] = -1   # codewords need to be [-1, 1] instead of [0, 1]
 
 # Init ECOC Model
-# model = Models.ecoc_ensemble_no_bn(W, nb_independent_models, filters, filter2, nb_independent_models*nb_bits_per_model, dataset_name) 
+model = Models.ecoc_ensemble_no_bn(W, nb_independent_models, filters, filter2, nb_independent_models*nb_bits_per_model, dataset_name) 
 
 # ECOC Resnet Models 
 model = Models.ResNetECOC(W, nb_independent_models, nb_independent_models) 
+
+total_params = sum(param.numel() for param in model.parameters())
+print(total_params)
+trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+print(trainable_params)
+quit()
 
 # Training params 
 optimizer = torch.optim.Adam(model.parameters(), lr=lr)
